@@ -1,1 +1,226 @@
-error_page_template-dynamic
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de">
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta http-equiv="content-language" content="de" />
+    <meta name="author" content="Benjamin Hof" />
+    <meta name="title" content="Virensperrseite (dynamische Liste)" />
+    <meta name="date" content="2009-07-14" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <title>Virensperrseite</title>
+
+    <style type="text/css">
+        html {
+        /*background-color:#FFFF66;*/
+            background-color:yellow;
+        }
+	td       { vertical-align:top;
+	}
+        .reason {
+            text-align: center;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<h1 style="text-align:center; text-style:caps">ZUGANGSSPERRUNG — internet
+    connection blocked</h1>
+
+<table><tr><td>
+<h2>Virensperrung</h2>
+<p>
+    Dein Internetanschluss wurde gesperrt, weil dein Computer mit Malware
+    infiziert ist. Viren sind im Münchner
+    Wissenschaftsnetz, zu dem auch das Netzwerk der Studentenstadt gehört, ein
+    großes Problem.  Virenverseuchte Rechner verursachen viel Schaden und
+    große Störungen im Netzwerk.
+    Sie werden oft ferngesteuert und zu Angriffen auf fremde Rechnernetze
+    mißbraucht.
+    Andere Viren spionieren zum Beispiel Kreditkartendaten von Online-Shopping
+    aus. Manche zerstören gespeicherte Daten, wie etwa Diplomarbeiten.
+</p>
+
+<h4>Festgestellter Auslöser:</h4>
+<p class="reason">
+    <!-- XXX insert line from blocklist here XXX -->
+    @@@REASON@@@
+</p>
+
+<h2>Weiteres Vorgehen</h2>
+<ul>
+    <li>Trenne deinen Computer sofort vom Netzwerk, damit keine Gefahr mehr von
+        ihm ausgeht.</li>
+    <li>Virenscan mit einer Rescue-CD durchführen (<a href="#links">Links zu
+            Virenscannern</a>)</li>
+    <li>alle Viren entfernen (u.U. nicht möglich, dann ist eine
+    Neuinstallation des Rechners fällig)</li>
+    <li>alle verfügbaren Betriebssystemupdates einspielen</li>
+    <li>Virenscanner installieren</li>
+    <li>alle Software, insbesondere Betriebssystem, Virenscanner und Webbrowser
+        immer mit den neuesten Updates aktuell halten</li>
+</ul>
+
+<p><b>Bei wiederholten Verstößen wird der Anschluss längerfristig gesperrt.
+</b></p>
+
+<p>
+    Leider können Virenscanner heutzutage nicht mehr alle Viren erkennen. Es
+    ist also möglich, dass ein Virus nicht gefunden oder entfernt werden
+    kann.<br />
+    Sollte dies der Fall sein oder ist es dir aufgrund mangelnder Zeit oder
+    fehlendem Fachwissen nicht möglich, dein Windows sicher und virenfrei zu
+    halten, so empfiehlt es sich dringend, auf ein sichereres und auch für
+    Ein-/Umsteiger einfach zu bedienendes Betriebssystem wie Ubuntu (<a
+        href="http://www.ubuntu.com/">kostenfreier Download</a>) zu wechseln.
+    Dies bietet mehr Features als Windows und ist erheblich sicherer.
+</p>
+
+<h2>Entsperrungsantrag</h2>
+<p>
+    Möglicherweise handelt es sich bei deiner Sperrung um eine Fehlauslösung,
+    etwa durch exzessive Nutzung von Peer-to-Peer Software oder Portscans.
+
+    Wenn du ein alternatives Betriebssystem wie Linux oder Mac OS verwendest,
+    handelt es sich wahrscheinlich auch um einen Fehlalarm.
+
+    In einem solchen Fall benenne bitte genau, welche Software in welcher
+    Version für die Störung verantwortlich ist und welches Betriebssystem du
+    verwendest.
+</p>
+
+<p>
+    Eine Entsperrung der gelben Seite findet nach gewisser Zeit automatisch
+    statt, wenn dein Rechner nicht mehr infiziert ist. Weitere Verstöße führen
+    allerdings sofort zu einer längerfristigen oder permanenten Sperrung. Du kannst
+    uns in einer Email an <a
+    href="mailto:novirus@stusta.mhn.de">novirus@stusta.mhn.de</a> weitere
+    Informationen zukommen lassen. Diese muss zwingend folgende Punkte enthalten,
+    damit sie bearbeitet werden kann:
+</p>
+<ul>
+    <li>Name</li>
+    <li>Haus und Zimmernummer</li>
+    <li>IP-Adresse</li>
+    <li>genaue Software und Version</li>
+    <li>Betriebssystem</li>
+    <li>genaue Beschreibung, wie der Störfall ausgelöst wurde</li>
+</ul>
+
+<p>
+    Einen kostenlosen Internetzugang gibt es in der Bibliothek der StuSta.
+</p>
+
+
+</td><td lang="en" xml:lang="en">
+<h2>Virus infection</h2>
+
+<p>
+    Your internet connection has been blocked because your computer is infected
+    with viruses or other malware. Viruses pose a huge threat to the Munich
+    Scientific Network, which the network of the Studentenstadt is a part of.
+    Infected computers cause large scale damage a and have significant impact
+    on the function of the network. Some viruses steal credit card data from
+    online shopping. Others are use your computer to automatically attack other
+    networks or computers.
+</p>
+
+<h4>Detected reason:</h4>
+<p class="reason">
+    <!-- XXX insert line from blocklist here XXX -->
+    @@@REASON@@@
+</p>
+
+<h2>Further procedure</h2>
+<ul>
+    <li>immediately disconnect your computer from the network to prevent
+        further damage</li>
+    <li>virus scan with a rescue CD (<a
+            href="#links">links to virus scanners</a>)</li>
+    <li>remove all viruses (may be impossible; in that case a new
+    installation of the computer is unavoidable)</li>
+    <li>install all availiable updates for your operating system</li>
+    <li>install a virus scanner</li>
+    <li>keep all software, most importantly operating system, virus scanner and
+        web browser, up to date</li>
+</ul>
+
+<p><b>If another incident occurs, your connection will be deactivated
+longer.</b></p>
+
+<p>
+    Unfortunately virus scanners today are incapable of reliably recognising
+    all viruses. It is therefore possible, that a virus cannot be found or
+    removed.<br />
+    In that case or if you do not have the time or know how to maintain your
+    Windows System secure and free of malware, please seriously consider
+    switching to a better operating system like Ubuntu (<a
+    href="http://www.ubuntu.com/">free download</a>). This is very easy to use,
+    free and offers more features than Windows and is much more secure.
+</p>
+
+<h2>Application for reactivation</h2>
+<p>
+    It is possible that you triggered a false alarm. This may come from
+    excessive use of peer-to-peer software or portscans. If you are using
+    an alternative operating system like Linux or Mac OS this is likely
+    the case, too. In such a case please tell us the exact name and
+    version of the software you used as well as your operating system.
+</p>
+
+<p>
+    When you are blocked by the yellow page your account will be automatically
+    reactivated after some time if you have removed all viruses. However you will be
+    blocked longer or permanent if additional offenses are detected. You can send
+    us an email to <a href="mailto:novirus@stusta.mhn.de">novirus@stusta.mhn.de</a>
+    with additional information. You need to include all of the following in order
+    get it handled:
+</p>
+<ul>
+    <li>Name</li>
+    <li>Number of building and apartment you live in</li>
+
+    <li>IP address</li>
+    <li>exact name and version of the guilty software</li>
+    <li>extensive description of what you have done to cause this
+        incident</li>
+</ul>
+<p>
+    There is free internet access in the StuSta library.
+</p>
+
+</td></tr></table>
+
+<h2 id="links">Links</h2>
+<ul>
+    <li><a href="http://www.heise.de/software/download/knoppicillin_download_edition/37894">Knoppicillin boot/rescue CD + Virus Scanner</a></li>
+    <li><a href="http://www.free-av.de/en/tools/12/avira_antivir_rescue_system.html">AntiVir Boot/Rescue CD + Virus Scanner</a></li>
+
+    <li><a href="http://www.lrz-muenchen.de/services/security/">LRZ Security</a></li>
+    <li><a href="http://www.ubuntu.com/">Ubuntu</a></li>
+
+    <li><a href="http://www.lrz-muenchen.de/services/security/antivirus/">LRZ
+    Antivirus and Sophos Virus Scanner</a></li>
+
+    <li><a href="http://windowsupdate.microsoft.com/">Windows Update</a></li>
+
+    <li><a href="http://www.free-av.com/">AntiVir Virus Scanner</a></li>
+    <li><a href="http://www.bitdefender.com/">Bitdefender Virus Scanner</a></li>
+    <li><a href="http://www.avast.de/">Avast Virus Scanner</a></li>
+    <li><a href="http://free.grisoft.com/">AVG Virus Scanner</a></li>
+</ul>
+
+<p style="text-align:center" lang="en" xml:lang="en">
+	<img src="http://imgs.xkcd.com/comics/network.png" width="740" height="414" title="Viruses so far have been
+    really disappointing on the 'disable the internet' front, and time is
+    running out.  When Linux/Mac win in a decade or so the game will be over."
+    alt="a comic" style="border:none;" /><br />
+    source: <a href="http://xkcd.com/350">xkcd</a>,
+    license: <a href="http://creativecommons.org/licenses/by-nc/2.5/">cc-by-nc 2.5</a>
+</p>
+
+</body>
+</html>
+
