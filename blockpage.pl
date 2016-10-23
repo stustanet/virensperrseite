@@ -1,4 +1,11 @@
 #!/usr/bin/perl
+#
+# annotated by suhu <stefan.huber@stusta.de> on 2016-10-22
+# this file is called from the proxy with e.g.
+# proxy.stusta.de:81/blockpage.pl/blocked/10.150.51.80
+#
+# Wolfgang Walter meinte "FM steht für FehlerMelsung, dass man leichter grepen
+#                         kann"
 
 use strict;
 use warnings;
@@ -12,22 +19,30 @@ use NetAddr::IP;
 use NetAddr::IP::Util;
 use Encode;
 
+# array of block types, that means either dynamic or permanent
 my @blocktypes = ( 'dynamic', 'permanent' );
 
+# array of filetypes
+# apparently this script can load a blocklist and html templates
 my @filetypes = ( 'blocklist', 'error_page_template' );
 
+# standard path. here the list of blocked ips should be.
 my $incoming = '/home/scp-rec/incoming';
-#my $incoming = '.';
 
+# hashmap for the block page templates, access with
+# $templates{'dynamic'} or $templates{'permanent'}
 my %templates;
 
+# hashmap of blocked accounts:
+# access: $blocklists{'dynamic'}{"10.150.51.80"} = "awesome guy"
 my %blocklists;
 
+# hash
 my %readconfig;
+
 
 my $stats;
 my $updates = 0;
-
 
 my $handling_request = 0;
 my $exit_requested = 0;
@@ -36,6 +51,8 @@ my $notifier;
 my $request;
 my $isfcgi;
 
+# apparently this scrip is to be run in background and can get unix
+# handler requests
 sub sig_handler_exit {
 	$exit_requested = 1;
 	$handling_request or exit(0);
@@ -45,7 +62,7 @@ $SIG{USR1} = \&sig_handler_exit;
 $SIG{TERM} = \&sig_handler_exit;
 $SIG{PIPE} = sub { die 'SIGPIPE\n'; };
 
-
+# this subroutine loads both error page templates into the templates hashmap
 sub load_error_page_template {
 	my ($blocktype, $filepath) = (@_);
 
@@ -60,24 +77,35 @@ sub load_error_page_template {
 	$templates{$blocktype} = $content;
 }
 
+# load_blocklist
+# @param blocktype Which blocktype should be loaded ('dynamic' or 'permanent'
+# @param filepath filepath to the blocklist, e.g. $incoming (see above)
 sub load_blocklist {
 	my ($blocktype, $filepath) = (@_);
 
+	# %block is a hashmap of blocked accounts: ip -> reason
+	# e.g. $block{'10.150.51.80'} = 'awesome guy'
+	# access: $blocklists{'dynamic'}{'10.150.51.80'} = 'awesome guy'
 	my %block;
 
 	#print STDERR "load_blocklist: $blocktype, $filepath\n";
 	eval {
+		# fh = FileHandler for the blocklist file
 		my $fh = IO::File->new($filepath) or die "can't read $filepath: $!\n ";
 		while (defined(my $line = <$fh>)) {
-			$line =~ /^#/ and next;
+			$line =~ /^#/ and next; # ignore lines starting with #
+			# regex: \s is whitespace character
 			my ($ip, $reason) = split(/\s+#\s+/, $line, 2);
-			defined($ip) or next;
+			defined($ip) or next; # if the split didn't return an
+                                              # ip -> next
 			defined($reason) or $reason = "Virus/Trojaner/Stoerer";
+			# substitute chars '&', '<' and '>' with HTML code
 			$reason =~ s/\&/\&amp;/g;
 			$reason =~ s/\</\&lt;/g;
 			$reason =~ s/\>/\&gt;/g;
+			# make an IP object from the string
 			$ip = NetAddr::IP->new($ip);
-			defined($ip) or next;
+			defined($ip) or next; # when it was no correct IP -> next
 			for (my $i=$ip->network, my $j=0;; $i++, $j++) {
 				$block{$i->addr} = $reason;
 				$i == $i->broadcast and last;
@@ -88,9 +116,11 @@ sub load_blocklist {
 				}
 			}
 		}
+		# on read error: die!
 		$fh->error and die "error when read $filepath: $!\n ";
 		$block{error} = "Virus/Trojaner/Stoerer";
 	};
+	# $@ = Error Message fom the last eval command.
 	if ($@) {
 		print STDERR "$@";
 		return;
@@ -121,6 +151,9 @@ sub check_config {
 	}
 }
 
+# do_errorpage prints an HTML error page if called.
+# should thus be called when unrecoverable error occurs.
+# in production environment: should not ever be executed!
 sub do_errorpage {
 	print(	"Status: 404\r\n",
 		"Content-type: text/plain\r\n\r\n")
@@ -135,15 +168,24 @@ sub do_errorpage {
 	}
 }
 
+# this is pretty much the main routine
 sub do_request() {
-	# ip-adresse bestimmen
+# determine ip-address
 	my $pathinfo = $ENV{SCRIPT_NAME};
 	if (! defined($pathinfo)) {
 		do_errorpage();
 		return;
 	}
+	# split script name
+	# example 'proxy.stusta.de:81/blockpage.pl/blocked/10.150.51.80'
 	my ($dummy1, $scriptname, $type, $arg1) = split(/\//, $pathinfo);
+	# now
+	#  $dummy1 should be the server name, '127.0.0.1:80'
+	#  $scriptname should be the name of this script ('blockpage.pl')
+	#  $type should be a 'blocked'
+	#  $arg1 should be the ip-address
 	if (! defined($type) || ! defined($arg1)) {
+		# if either type or ip are not defined, something went wrong!
 		do_errorpage();
 		return;
 	}
@@ -155,10 +197,13 @@ sub do_request() {
 		do_errorpage();
 		return;
 	}
+
+# determine block reason and blocktype
 	my $ip = NetAddr::IP->new($arg1);
 	defined($ip) and $arg1 = $ip->addr;
 	my $reason;
 	my $blocktype;
+	# hint: @blocktypes = {'permanent', 'dynamic'}
 	foreach my $b (@blocktypes) {
 		if ($blocklists{$b} && ($reason = $blocklists{$b}->{$arg1})) {
 			$blocktype = $b;
@@ -169,16 +214,21 @@ sub do_request() {
 		$blocktype = $blocktypes[0];
 		$reason = $blocklists{$blocktype}->{error};
 	}
+
+# load and modify the blockpage template
 	my $template = $templates{$blocktype};
 
+	# substitute the reason from the template
 	$template =~ s/\@\@\@REASON\@\@\@/$reason/g;
 	$template = Encode::encode('utf8', $template);
 
+# print the HTML header
 	print("Status: 404\r\n", "Content-type: text/html\r\n\r\n")
 	or $isfcgi or die "FM error when writing to stdout: $!\n ";
 	#print STDERR "DM OK1\n";
 	$isfcgi or STDOUT->flush();
 	$request->Flush();
+# print the template page!
 	print($template)
 	or $isfcgi or die "FM error when writing to stdout: $!\n ";
 	$isfcgi or STDOUT->flush();
@@ -210,6 +260,8 @@ foreach my $blocktype (@blocktypes) {
 while ($handling_request = ($request->Accept() >= 0)) {
 	check_config();
 	eval {
+
+# here the creation of the html output page actually happens!
 		do_request();
 	};
 	if ($@ && $@ ne 'SIGPIPE\n') {
