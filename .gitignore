@@ -13,3 +13,9 @@
 *.pyc
 *.pyo
 __pycache__
+
+# blocklists
+blocklist-complete
+blocklist-dynamic
+blocklist-permanent
+blocklistv6-complete
